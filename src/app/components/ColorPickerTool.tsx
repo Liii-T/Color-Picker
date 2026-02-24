@@ -826,16 +826,15 @@ export default function ColorPickerTool() {
     setShowDialog(false);
   };
 
-  return (
-    <div
-      className="flex flex-col items-start relative size-full min-h-screen font-sans"
-      style={{ backgroundColor: secondaryColor }}
-    >
+return (
+  <div className="flex flex-col items-start relative h-full w-full font-sans overflow-hidden" style={{ backgroundColor: secondaryColor }}>
+    
       {/* Header */}
-      <div className="bg-black flex items-center relative shrink-0 w-full text-white" 
+<div 
+  className="bg-black flex items-center relative shrink-0 w-full text-white" 
   style={{ 
-    paddingTop: 'env(safe-area-inset-top)', // 加入這行：自動避開劉海區
-    height: 'calc(48px + env(safe-area-inset-top))' // 高度也要加上去
+    paddingTop: 'env(safe-area-inset-top)', 
+    height: 'calc(48px + env(safe-area-inset-top))' 
   }}
 >
         <div className="w-[70px] flex items-center justify-center h-full px-[12px]">
@@ -888,10 +887,9 @@ export default function ColorPickerTool() {
       </div>
 
       {/* Bg Preview */}
-      <div
-        className="flex-1 flex flex-col w-full relative overflow-hidden justify-between"
-        style={{ backgroundColor: secondaryColor }}
-      >
+<div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between" style={{ backgroundColor: secondaryColor }}>
+  {/* 這裡面的內容會根據螢幕剩餘高度自動排列 */}
+</div>
         {/* Header Preview Section */}
         <div className="flex flex-col h-[68px] shrink-0 w-full relative">
           <div className="h-px shrink-0 w-full" style={{ backgroundColor: previewTopBorderColor }} />
@@ -1091,20 +1089,17 @@ export default function ColorPickerTool() {
             </div>
           </div>
 
-          {/* Footer Buttons - 這裡修改了 padding 避開底部白條 */}
-      <div 
-        className="bg-[#252625] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full"
-        style={{ 
-          paddingBottom: 'calc(16px + env(safe-area-inset-bottom))', // 關鍵：把按鈕往上推
-          height: 'auto' 
-        }}
-      >
-        <button 
-          onClick={handleReload} 
-          className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors"
-        >
-           <TablerIconReload />
-        </button>
+{/* Footer Buttons */}
+<div 
+  className="bg-[#252625] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full"
+  style={{ 
+    paddingBottom: 'calc(16px + env(safe-area-inset-bottom))',
+    height: 'auto' 
+  }}
+>
+  <button onClick={handleReload} className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center">
+      <TablerIconReload />
+  </button>
         <button 
           onClick={handleCancel} 
           className="bg-[#575858] flex flex-[1_0_0] h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors"
