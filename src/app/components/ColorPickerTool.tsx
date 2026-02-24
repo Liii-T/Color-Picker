@@ -938,14 +938,16 @@ return (
       )}
     </div>
 
-    {/* Dialog */}
-    {showDialog && (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowDialog(false)}>
-        <div className="bg-white rounded-lg p-8 flex flex-col items-center gap-4" onClick={e => e.stopPropagation()}>
-          <div className="bg-green-500 rounded-full p-2"><SuccessNoCircle /></div>
-          <div className="text-black">保存成功</div>
+    {/* 這裡應該是原本 Dialog 或是最後一個 div 的結尾 */}
+      {showDialog && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowDialog(false)}>
+          <div className="bg-white rounded-lg p-8 flex flex-col items-center gap-4" onClick={e => e.stopPropagation()}>
+            <div className="bg-green-500 rounded-full p-2"><SuccessNoCircle /></div>
+            <div className="text-black">保存成功</div>
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-);
+      )}
+
+    </div> // 對應最外層的 <div className="flex flex-col...
+  ); // 對應 return (
+} // 對應 export default function ColorPickerTool() {
