@@ -1091,21 +1091,33 @@ export default function ColorPickerTool() {
             </div>
           </div>
 
-          {/* Footer Buttons - Layout A */}
-          <div className="bg-[#252625] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full"
-  style={{ 
-    paddingBottom: 'calc(16px + env(safe-area-inset-bottom))', // 增加緩衝空間
-    height: 'auto' // 移除固定 74px，讓內容根據 padding 自適應
-  }}
->
-            </button>
-            <button onClick={handleCancel} className="bg-[#575858] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
-              取消
-            </button>
-            <button onClick={handleSave} className="bg-[#dc3b40] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#e05055] active:bg-[#b03033] transition-colors">
-              保存配色
-            </button>
-          </div>
+          {/* Footer Buttons */}
+      <div 
+        className="bg-[#252625] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full"
+        style={{ 
+          paddingBottom: 'calc(12px + env(safe-area-inset-bottom))',
+          height: 'auto' 
+        }}
+      >
+        <button 
+          onClick={handleReload} 
+          className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors"
+        >
+           <TablerIconReload />
+        </button>
+        <button 
+          onClick={handleCancel} 
+          className="bg-[#575858] flex flex-[1_0_0] h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors"
+        >
+          取消
+        </button>
+        <button 
+          onClick={handleSave} 
+          className="bg-[#dc3b40] flex flex-[1_0_0] h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#e05055] active:bg-[#b03033] transition-colors"
+        >
+          保存配色
+        </button>
+      </div>
         </div>
       ) : (
         <>
