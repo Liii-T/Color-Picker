@@ -909,7 +909,7 @@ export default function ColorPickerTool() {
                       className="size-[24px] bg-no-repeat"
                       style={{
                         backgroundImage: `url('${imgItem}')`,
-                        backgroundSize: "48px 144px",
+                        backgroundSize: "24px 24px",
                         backgroundPosition: "left top",
                       }}
                     />
@@ -917,7 +917,7 @@ export default function ColorPickerTool() {
                       className="size-[24px] bg-no-repeat"
                       style={{
                         backgroundImage: `url('${imgItem}')`,
-                        backgroundSize: "48px 144px",
+                        backgroundSize: "24px 24px",
                         backgroundPosition: "left top",
                       }}
                     />
@@ -925,7 +925,7 @@ export default function ColorPickerTool() {
                       className="size-[24px] bg-no-repeat"
                       style={{
                         backgroundImage: `url('${imgItem}')`,
-                        backgroundSize: "48px 144px",
+                        backgroundSize: "24px 24px",
                         backgroundPosition: "left top",
                       }}
                     />
