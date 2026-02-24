@@ -9,7 +9,7 @@ import mixPlugin from "colord/plugins/mix";
 import namesPlugin from "colord/plugins/names";
 import { HexColorInput } from "react-colorful";
 import svgPaths from "../../imports/svg-5u5o543v2s";
-import imgItem from "figma:asset/423fbf491ac4f4942e830c525241204e81939b1b.png";
+import imgItem from "/Item.png";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
