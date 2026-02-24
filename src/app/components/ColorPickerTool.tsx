@@ -273,7 +273,7 @@ const Saturation = ({
       >
         <div
           aria-hidden="true"
-          className="absolute border border-[rgba(0,0,0,0.3)] border-solid inset-[-1px] pointer-events-none rounded-[9px]"
+          className="absolute border border-[rgba(255,255,255,0.05)] border-solid inset-[-1px] pointer-events-none rounded-[9px]"
         />
       </div>
 
@@ -419,7 +419,7 @@ const HueSlider = ({
       >
         <div
           aria-hidden="true"
-          className="absolute border border-[rgba(0,0,0,0.3)] border-solid inset-[-1px] pointer-events-none rounded-[9px]"
+          className="absolute border border-[rgba(255,255,255,0.05)] border-solid inset-[-1px] pointer-events-none rounded-[9px]"
         />
 
         {/* Handle */}
@@ -855,7 +855,7 @@ export default function ColorPickerTool() {
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 top-[48px] w-[120px] z-30">
+            <div className="absolute right-0 top-[30px] w-[120px] z-30">
               <div className="flex flex-col items-end justify-end shadow-[0px_1px_12px_0px_rgba(51,51,51,0.08)]">
                 <div className="relative shrink-0 size-[18px]">
                   <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
@@ -1039,12 +1039,12 @@ export default function ColorPickerTool() {
           <div className="flex flex-col items-center w-full h-auto">
             <div className="flex flex-col gap-[16px] items-center p-[16px] w-full">
               {/* Tab */}
-              <div className="bg-[rgba(0,0,0,0.3)] h-[36px] relative rounded-[8px] shrink-0 w-full p-[4px] flex gap-[4px]">
-                <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0.3)] inset-0 pointer-events-none rounded-[4px]" />
-                <button onClick={() => setActiveTab("Primary")} className={cn("flex-[1_0_0] h-full rounded-[6px] flex items-center justify-center transition-all relative z-10", activeTab === "Primary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
+              <div className="bg-[rgba(255,255,255,0.05)] h-[36px] relative rounded-[8px] shrink-0 w-full p-[4px] flex gap-[4px]">
+                <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0.3)] inset-0 pointer-events-none rounded-[4.53px]" />
+                <button onClick={() => setActiveTab("Primary")} className={cn("flex-[1_0_0] h-full rounded-[3px] flex items-center justify-center transition-all relative z-10", activeTab === "Primary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
                   <span className="text-[14px] font-medium">主色</span>
                 </button>
-                <button onClick={() => setActiveTab("Secondary")} className={cn("flex-[1_0_0] h-full rounded-[6px] flex items-center justify-center transition-all relative z-10", activeTab === "Secondary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
+                <button onClick={() => setActiveTab("Secondary")} className={cn("flex-[1_0_0] h-full rounded-[3px] flex items-center justify-center transition-all relative z-10", activeTab === "Secondary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
                   <span className="text-[14px] font-medium">副色</span>
                 </button>
               </div>
@@ -1059,7 +1059,7 @@ export default function ColorPickerTool() {
                     </div>
                   </div>
                   <div className="flex flex-[1_0_0] items-center relative h-[36px]">
-                    <div className={cn("flex-[1_0_0] h-full rounded-[8px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Primary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
+                    <div className={cn("flex-[1_0_0] h-full rounded-[4.53px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Primary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
                       <span className="text-[#969298] mr-1 text-[14px] font-medium">#</span>
                       <HexColorInput className={cn("bg-transparent w-full outline-none uppercase font-medium text-[14px] transition-colors", activeTab === "Primary" ? "text-white" : "text-[#969298]")} color={primaryColor} onChange={(c) => setPrimaryColor(c.startsWith("#") ? c : "#" + c)} prefixed={false} onFocus={() => setActiveTab("Primary")} onClick={(e) => { e.stopPropagation(); setActiveTab("Primary"); }} />
                     </div>
@@ -1073,7 +1073,7 @@ export default function ColorPickerTool() {
                     </div>
                   </div>
                   <div className="flex flex-[1_0_0] items-center relative h-[36px]">
-                    <div className={cn("flex-[1_0_0] h-full rounded-[8px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Secondary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
+                    <div className={cn("flex-[1_0_0] h-full rounded-[4.53px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Secondary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
                       <span className="text-[#969298] mr-1 text-[14px] font-medium">#</span>
                       <HexColorInput className={cn("bg-transparent w-full outline-none uppercase font-medium text-[14px] transition-colors", activeTab === "Secondary" ? "text-white" : "text-[#969298]")} color={secondaryColor} onChange={(c) => setSecondaryColor(c.startsWith("#") ? c : "#" + c)} prefixed={false} onFocus={() => setActiveTab("Secondary")} onClick={(e) => { e.stopPropagation(); setActiveTab("Secondary"); }} />
                     </div>
@@ -1087,7 +1087,7 @@ export default function ColorPickerTool() {
           </div>
 
           {/* Footer Buttons - Layout A */}
-          <div className="bg-[#252625] h-[74px] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full">
+          <div className="bg-[#252625] h-[74px] border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full">
             <button onClick={handleReload} className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors">
               <TablerIconReload />
             </button>
@@ -1150,7 +1150,7 @@ export default function ColorPickerTool() {
 
           {/* Footer Buttons - Layout B */}
           <div className="bg-black h-[74px] relative shrink-0 w-full">
-            <div aria-hidden="true" className="absolute border-[rgba(0,0,0,0.3)] border-solid border-t inset-0 pointer-events-none" />
+            <div aria-hidden="true" className="absolute border-[rgba(255,255,255,0.05)] border-solid border-t inset-0 pointer-events-none" />
             <div className="flex items-center size-full">
               <div className="flex gap-[8px] items-center p-[16px] size-full">
                 <button onClick={handleReload} className="bg-[#575858] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
