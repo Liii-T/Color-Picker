@@ -832,7 +832,12 @@ export default function ColorPickerTool() {
       style={{ backgroundColor: secondaryColor }}
     >
       {/* Header */}
-      <div className="bg-black flex h-[48px] items-center relative shrink-0 w-full text-white z-20">
+      <div className="bg-black flex items-center relative shrink-0 w-full text-white" 
+  style={{ 
+    paddingTop: 'env(safe-area-inset-top)', // 加入這行：自動避開劉海區
+    height: 'calc(48px + env(safe-area-inset-top))' // 高度也要加上去
+  }}
+>
         <div className="w-[70px] flex items-center justify-center h-full px-[12px]">
           <TablerIconX />
         </div>
@@ -1087,9 +1092,12 @@ export default function ColorPickerTool() {
           </div>
 
           {/* Footer Buttons - Layout A */}
-          <div className="bg-[#252625] h-[74px] border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full">
-            <button onClick={handleReload} className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors">
-              <TablerIconReload />
+          <div className="bg-[#252625] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full"
+  style={{ 
+    paddingBottom: 'calc(16px + env(safe-area-inset-bottom))', // 增加緩衝空間
+    height: 'auto' // 移除固定 74px，讓內容根據 padding 自適應
+  }}
+>
             </button>
             <button onClick={handleCancel} className="bg-[#575858] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
               取消
