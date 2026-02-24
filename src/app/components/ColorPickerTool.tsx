@@ -9,7 +9,7 @@ import mixPlugin from "colord/plugins/mix";
 import namesPlugin from "colord/plugins/names";
 import { HexColorInput } from "react-colorful";
 import svgPaths from "../../imports/svg-5u5o543v2s";
-import imgItem from "/Item.png";
+import imgItem from "/Item.png"; 
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -687,14 +687,9 @@ const DEFAULT_PRIMARY = "#19593C";
 const DEFAULT_SECONDARY = "#317455";
 
 export default function ColorPickerTool() {
-  const [primaryColor, setPrimaryColor] =
-    useState(DEFAULT_PRIMARY);
-  const [secondaryColor, setSecondaryColor] = useState(
-    DEFAULT_SECONDARY,
-  );
-  const [activeTab, setActiveTab] = useState<
-    "Primary" | "Secondary"
-  >("Primary");
+  const [primaryColor, setPrimaryColor] = useState(DEFAULT_PRIMARY);
+  const [secondaryColor, setSecondaryColor] = useState(DEFAULT_SECONDARY);
+  const [activeTab, setActiveTab] = useState<"Primary" | "Secondary">("Primary");
   const [showDialog, setShowDialog] = useState(false);
   const [layout, setLayout] = useState<"A" | "B">("A");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -717,53 +712,26 @@ export default function ColorPickerTool() {
     secondary: DEFAULT_SECONDARY,
   });
 
-  const currentColor =
-    activeTab === "Primary" ? primaryColor : secondaryColor;
-  const currentSetColor =
-    activeTab === "Primary"
-      ? setPrimaryColor
-      : setSecondaryColor;
-
+  const currentColor = activeTab === "Primary" ? primaryColor : secondaryColor;
+  const currentSetColor = activeTab === "Primary" ? setPrimaryColor : setSecondaryColor;
   const currentHsv = colord(currentColor).toHsv();
 
-  // Derived text color: secondaryColor + white 0.6 overlay
-  const previewTextColor = colord(secondaryColor)
-    .mix("#FFFFFF", 0.6)
-    .toHex();
+  const previewTextColor = colord(secondaryColor).mix("#FFFFFF", 0.6).toHex();
+  const previewTopBorderColor = colord(primaryColor).mix(secondaryColor, 0.5).toHex();
+  const previewVerticalBorderColor = colord(primaryColor).darken(0.05).toHex();
 
-  // Derived border colors for preview (dynamic from primary/secondary)
-  const previewTopBorderColor = colord(primaryColor)
-    .mix(secondaryColor, 0.5)
-    .toHex();
-  const previewVerticalBorderColor = colord(primaryColor)
-    .darken(0.05)
-    .toHex();
-
-  const handleColorChange = (newHsv: {
-    h: number;
-    s: number;
-    v: number;
-  }) => {
+  const handleColorChange = (newHsv: { h: number; s: number; v: number }) => {
     const newHex = colord(newHsv).toHex().toUpperCase();
     currentSetColor(newHex);
   };
 
   const handleHueChange = (newHue: number) => {
-    const newHex = colord({ ...currentHsv, h: newHue })
-      .toHex()
-      .toUpperCase();
+    const newHex = colord({ ...currentHsv, h: newHue }).toHex().toUpperCase();
     currentSetColor(newHex);
   };
 
   const handleSave = () => {
-    console.log("Colors Saved:", {
-      primaryColor,
-      secondaryColor,
-    });
-    setInitialState({
-      primary: primaryColor,
-      secondary: secondaryColor,
-    });
+    setInitialState({ primary: primaryColor, secondary: secondaryColor });
     setShowDialog(true);
   };
 
@@ -777,62 +745,19 @@ export default function ColorPickerTool() {
     setSecondaryColor(DEFAULT_SECONDARY);
   };
 
-  const handleRestoreDefault = () => {
-    handleReload();
-    setShowDialog(false);
-  };
-
-  const handleCopyColor = async () => {
-    const text = `Primary: ${primaryColor}, Secondary: ${secondaryColor}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("Colors copied to clipboard: " + text);
-    } catch (err) {
-      // Fallback for environments where clipboard API is blocked
-      console.warn(
-        "Clipboard API failed, trying legacy fallback...",
-        err,
-      );
-      try {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-
-        // Ensure it's not visible but part of the DOM
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        textArea.style.top = "0";
-        document.body.appendChild(textArea);
-
-        textArea.focus();
-        textArea.select();
-
-        const successful = document.execCommand("copy");
-        document.body.removeChild(textArea);
-
-        if (successful) {
-          alert("Colors copied to clipboard: " + text);
-        } else {
-          throw new Error("execCommand copy failed");
-        }
-      } catch (fallbackErr) {
-        console.error("Failed to copy: ", fallbackErr);
-        alert(
-          "Failed to copy colors. Please manually copy them.",
-        );
-      }
-    }
-
-    setShowDialog(false);
-  };
-
   return (
     <div
-      className="flex flex-col items-start relative size-full min-h-screen font-sans"
+      className="flex flex-col items-start relative h-full w-full font-sans overflow-hidden"
       style={{ backgroundColor: secondaryColor }}
     >
-      {/* Header */}
-      <div className="bg-black flex h-[48px] items-center relative shrink-0 w-full text-white z-20">
+      {/* 1. Header: 固定高度並避開劉海 */}
+      <div 
+        className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
+        style={{ 
+          paddingTop: 'env(safe-area-inset-top)', 
+          height: 'calc(48px + env(safe-area-inset-top))' 
+        }}
+      >
         <div className="w-[70px] flex items-center justify-center h-full px-[12px]">
           <TablerIconX />
         </div>
@@ -882,7 +807,7 @@ export default function ColorPickerTool() {
         </div>
       </div>
 
-      {/* Bg Preview */}
+      {/* 2. Bg Preview: 自動適應剩餘高度並禁止溢出 */}
       <div
         className="flex-1 flex flex-col w-full relative overflow-hidden justify-between"
         style={{ backgroundColor: secondaryColor }}
@@ -982,9 +907,9 @@ export default function ColorPickerTool() {
           </div>
         </div>
 
-        {/* Main Body Preview */}
+        {/* Main Body Preview: 讓中間內容具備彈性且不超出容器 */}
         <div
-          className="flex flex-[1_0_0] flex-col items-start min-h-px py-[12px] relative w-full"
+          className="flex-1 flex flex-col items-start py-[12px] relative w-full overflow-hidden"
           style={{ backgroundColor: secondaryColor }}
         >
           <div className="relative shrink-0 w-full">
@@ -996,10 +921,10 @@ export default function ColorPickerTool() {
                   </div>
                 </div>
                 <div
-                  className="flex flex-[1_0_0] flex-col justify-center ml-2 text-[12px] leading-[normal]"
+                  className="flex-1 flex flex-col justify-center ml-2 text-[12px] leading-[normal]"
                   style={{ color: previewTextColor }}
                 >
-                  从11-66中任选1个或多个号码，选号与奖号(包含11-66，不限顺序)相同，即为中奖（不含豹子）。赔率11.66倍。
+                  从11-66中任选1个或多个号码，选号與獎號(包含11-66，不限順序)相同，即為中獎（不含豹子）。賠率11.66倍。
                 </div>
               </div>
             </div>
@@ -1011,7 +936,7 @@ export default function ColorPickerTool() {
               {[11, 22, 33].map((num) => (
                 <div
                   key={num}
-                  className="flex-[1_0_0] relative border border-[#f4c829] flex justify-center items-center py-[4px]"
+                  className="flex-1 relative border border-[#f4c829] flex justify-center items-center py-[4px] rounded"
                 >
                   <span className="text-[#f4c829] text-[20px] leading-[32px]">
                     {num}
@@ -1021,7 +946,7 @@ export default function ColorPickerTool() {
               {[44, 55, 66].map((num) => (
                 <div
                   key={num}
-                  className="flex-[1_0_0] relative border border-[rgba(255,255,255,0.2)] flex justify-center items-center py-[4px]"
+                  className="flex-1 relative border border-[rgba(255,255,255,0.2)] flex justify-center items-center py-[4px] rounded"
                 >
                   <span className="text-white text-[20px] leading-[32px]">
                     {num}
@@ -1033,18 +958,18 @@ export default function ColorPickerTool() {
         </div>
       </div>
 
-      {/* Color Picker Control Panel - Layout A or B */}
-      {layout === "A" ? (
-        <div className="bg-[#252625] w-full relative rounded-t-[12px] pb-[safe-area-bottom]">
-          <div className="flex flex-col items-center w-full h-auto">
+      {/* 3. Control Panel: 固定在底部，避開底部手勢區域 */}
+      <div className="bg-[#252625] w-full relative rounded-t-[12px] shrink-0">
+        {layout === "A" ? (
+          <div className="flex flex-col w-full h-auto">
             <div className="flex flex-col gap-[16px] items-center p-[16px] w-full">
               {/* Tab */}
               <div className="bg-[rgba(255,255,255,0.05)] h-[36px] relative rounded-[8px] shrink-0 w-full p-[4px] flex gap-[4px]">
                 <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0.3)] inset-0 pointer-events-none rounded-[4.53px]" />
-                <button onClick={() => setActiveTab("Primary")} className={cn("flex-[1_0_0] h-full rounded-[3px] flex items-center justify-center transition-all relative z-10", activeTab === "Primary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
+                <button onClick={() => setActiveTab("Primary")} className={cn("flex-1 h-full rounded-[3px] flex items-center justify-center transition-all relative z-10", activeTab === "Primary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
                   <span className="text-[14px] font-medium">主色</span>
                 </button>
-                <button onClick={() => setActiveTab("Secondary")} className={cn("flex-[1_0_0] h-full rounded-[3px] flex items-center justify-center transition-all relative z-10", activeTab === "Secondary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
+                <button onClick={() => setActiveTab("Secondary")} className={cn("flex-1 h-full rounded-[3px] flex items-center justify-center transition-all relative z-10", activeTab === "Secondary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[#969298] hover:bg-[#333]")}>
                   <span className="text-[14px] font-medium">副色</span>
                 </button>
               </div>
@@ -1052,28 +977,28 @@ export default function ColorPickerTool() {
               {/* Table Color Inputs */}
               <div className="flex gap-[16px] items-center shrink-0 w-full">
                 {/* Primary Group */}
-                <div className="flex items-center gap-[16px] flex-[1_0_0] cursor-pointer group" onClick={() => setActiveTab("Primary")}>
+                <div className="flex items-center gap-[16px] flex-1 cursor-pointer group" onClick={() => setActiveTab("Primary")}>
                   <div className="p-[2px] rounded-[99px] shrink-0 size-[32px]" style={{ backgroundColor: primaryColor }}>
                     <div className={cn("size-full rounded-full border-2 relative overflow-hidden transition-colors", activeTab === "Primary" ? "border-white" : "border-transparent")} style={activeTab !== "Primary" ? { borderColor: primaryColor } : undefined}>
                       <div className="absolute inset-0" style={{ backgroundColor: primaryColor }} />
                     </div>
                   </div>
-                  <div className="flex flex-[1_0_0] items-center relative h-[36px]">
-                    <div className={cn("flex-[1_0_0] h-full rounded-[4.53px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Primary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
+                  <div className="flex flex-1 items-center relative h-[36px]">
+                    <div className={cn("flex-1 h-full rounded-[4.53px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Primary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
                       <span className="text-[#969298] mr-1 text-[14px] font-medium">#</span>
                       <HexColorInput className={cn("bg-transparent w-full outline-none uppercase font-medium text-[14px] transition-colors", activeTab === "Primary" ? "text-white" : "text-[#969298]")} color={primaryColor} onChange={(c) => setPrimaryColor(c.startsWith("#") ? c : "#" + c)} prefixed={false} onFocus={() => setActiveTab("Primary")} onClick={(e) => { e.stopPropagation(); setActiveTab("Primary"); }} />
                     </div>
                   </div>
                 </div>
                 {/* Secondary Group */}
-                <div className="flex items-center gap-[16px] flex-[1_0_0] cursor-pointer group" onClick={() => setActiveTab("Secondary")}>
+                <div className="flex items-center gap-[16px] flex-1 cursor-pointer group" onClick={() => setActiveTab("Secondary")}>
                   <div className="p-[2px] rounded-[99px] shrink-0 size-[32px]" style={{ backgroundColor: secondaryColor }}>
                     <div className={cn("size-full rounded-full border-2 relative overflow-hidden transition-colors", activeTab === "Secondary" ? "border-white" : "border-transparent")} style={activeTab !== "Secondary" ? { borderColor: secondaryColor } : undefined}>
                       <div className="absolute inset-0" style={{ backgroundColor: secondaryColor }} />
                     </div>
                   </div>
-                  <div className="flex flex-[1_0_0] items-center relative h-[36px]">
-                    <div className={cn("flex-[1_0_0] h-full rounded-[4.53px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Secondary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
+                  <div className="flex flex-1 items-center relative h-[36px]">
+                    <div className={cn("flex-1 h-full rounded-[4.53px] flex items-center px-[12px] bg-transparent border transition-colors", activeTab === "Secondary" ? "border-[#575858]" : "border-transparent bg-[#1a1b1a] group-hover:bg-[#2a2b2a]")}>
                       <span className="text-[#969298] mr-1 text-[14px] font-medium">#</span>
                       <HexColorInput className={cn("bg-transparent w-full outline-none uppercase font-medium text-[14px] transition-colors", activeTab === "Secondary" ? "text-white" : "text-[#969298]")} color={secondaryColor} onChange={(c) => setSecondaryColor(c.startsWith("#") ? c : "#" + c)} prefixed={false} onFocus={() => setActiveTab("Secondary")} onClick={(e) => { e.stopPropagation(); setActiveTab("Secondary"); }} />
                     </div>
@@ -1084,88 +1009,89 @@ export default function ColorPickerTool() {
               <Saturation hsv={currentHsv} onChange={handleColorChange} />
               <HueSlider hue={currentHsv.h} onChange={handleHueChange} />
             </div>
-          </div>
 
-          {/* Footer Buttons - Layout A */}
-          <div className="bg-[#252625] h-[74px] border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full">
-            <button onClick={handleReload} className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors">
-              <TablerIconReload />
-            </button>
-            <button onClick={handleCancel} className="bg-[#575858] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
-              取消
-            </button>
-            <button onClick={handleSave} className="bg-[#dc3b40] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#e05055] active:bg-[#b03033] transition-colors">
-              保存配色
-            </button>
+            {/* Footer Buttons - Layout A 底部內縮修正 */}
+            <div 
+              className="bg-[#252625] border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full"
+              style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom))' }}
+            >
+              <button onClick={handleReload} className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors">
+                <TablerIconReload />
+              </button>
+              <button onClick={handleCancel} className="bg-[#575858] flex-1 h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
+                取消
+              </button>
+              <button onClick={handleSave} className="bg-[#dc3b40] flex-1 h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#e05055] active:bg-[#b03033] transition-colors">
+                保存配色
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <>
-          {/* Layout B - Color Picker */}
-          <div className="flex flex-col items-center relative shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shrink-0 w-full">
-            {/* Value Input & Controls Bar */}
-            <div className="bg-black relative shrink-0 w-full">
-              <div className="flex gap-[8px] items-start px-[16px] py-[12px] w-full">
-                {/* Segmented Control */}
-                <div className="bg-[rgba(255,255,255,0.1)] flex-[1_0_0] h-[36px] relative rounded-[4.53px]">
-                  <div aria-hidden="true" className="absolute border border-[rgba(255,255,255,0.1)] border-solid inset-0 pointer-events-none rounded-[4.53px]" />
-                  <div className="flex gap-[4px] items-start p-[4px] size-full relative z-10">
-                    <button onClick={() => setActiveTab("Primary")} className={cn("flex-[1_0_0] h-full rounded-[4.53px] flex items-center justify-center transition-all cursor-pointer", activeTab === "Primary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[rgba(255,255,255,0.5)] hover:bg-[rgba(255,255,255,0.05)]")}>
-                      <span className="text-[14px] font-medium">主色</span>
-                    </button>
-                    <button onClick={() => setActiveTab("Secondary")} className={cn("flex-[1_0_0] h-full rounded-[4.53px] flex items-center justify-center transition-all cursor-pointer", activeTab === "Secondary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[rgba(255,255,255,0.5)] hover:bg-[rgba(255,255,255,0.05)]")}>
-                      <span className="text-[14px] font-medium">副色</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Active Color Circle + Input */}
-                <div className="flex gap-[8px] items-center shrink-0">
-                  <div className="p-[2px] rounded-[99px] shrink-0 size-[32px]" style={{ backgroundColor: currentColor }}>
-                    <div className="size-full rounded-full border-2 border-white relative overflow-hidden">
-                      <div className="absolute inset-0" style={{ backgroundColor: currentColor }} />
+        ) : (
+          <div className="flex flex-col w-full h-auto">
+            {/* Layout B - Color Picker */}
+            <div className="flex flex-col items-center relative shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shrink-0 w-full">
+              {/* Value Input & Controls Bar */}
+              <div className="bg-black relative shrink-0 w-full">
+                <div className="flex gap-[8px] items-start px-[16px] py-[12px] w-full">
+                  {/* Segmented Control */}
+                  <div className="bg-[rgba(255,255,255,0.1)] flex-1 h-[36px] relative rounded-[4.53px]">
+                    <div aria-hidden="true" className="absolute border border-[rgba(255,255,255,0.1)] border-solid inset-0 pointer-events-none rounded-[4.53px]" />
+                    <div className="flex gap-[4px] items-start p-[4px] size-full relative z-10">
+                      <button onClick={() => setActiveTab("Primary")} className={cn("flex-1 h-full rounded-[4.53px] flex items-center justify-center transition-all cursor-pointer", activeTab === "Primary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[rgba(255,255,255,0.5)] hover:bg-[rgba(255,255,255,0.05)]")}>
+                        <span className="text-[14px] font-medium">主色</span>
+                      </button>
+                      <button onClick={() => setActiveTab("Secondary")} className={cn("flex-1 h-full rounded-[4.53px] flex items-center justify-center transition-all cursor-pointer", activeTab === "Secondary" ? "bg-[#575858] shadow-[2px_2px_8px_0px_rgba(22,19,23,0.2)] text-white" : "text-[rgba(255,255,255,0.5)] hover:bg-[rgba(255,255,255,0.05)]")}>
+                        <span className="text-[14px] font-medium">副色</span>
+                      </button>
                     </div>
                   </div>
-                  <div className="relative rounded-[4.53px] shrink-0 w-[92px]">
-                    <div className="flex gap-[4px] items-center rounded-[inherit] px-[12px] py-[8px] text-[14px] relative z-10">
-                      <span className="text-[#969298] font-medium w-[10px]">#</span>
-                      <HexColorInput className="bg-transparent w-full outline-none uppercase font-medium text-[14px] text-white cursor-text" color={currentColor} onChange={(c) => currentSetColor(c.startsWith("#") ? c : "#" + c)} prefixed={false} />
+
+                  {/* Active Color Circle + Input */}
+                  <div className="flex gap-[8px] items-center shrink-0">
+                    <div className="p-[2px] rounded-[99px] shrink-0 size-[32px]" style={{ backgroundColor: currentColor }}>
+                      <div className="size-full rounded-full border-2 border-white relative overflow-hidden">
+                        <div className="absolute inset-0" style={{ backgroundColor: currentColor }} />
+                      </div>
                     </div>
-                    <div aria-hidden="true" className="absolute border border-[#575858] border-solid inset-0 pointer-events-none rounded-[4.53px]" />
+                    <div className="relative rounded-[4.53px] shrink-0 w-[92px]">
+                      <div className="flex gap-[4px] items-center rounded-[inherit] px-[12px] py-[8px] text-[14px] relative z-10">
+                        <span className="text-[#969298] font-medium w-[10px]">#</span>
+                        <HexColorInput className="bg-transparent w-full outline-none uppercase font-medium text-[14px] text-white cursor-text" color={currentColor} onChange={(c) => currentSetColor(c.startsWith("#") ? c : "#" + c)} prefixed={false} />
+                      </div>
+                      <div aria-hidden="true" className="absolute border border-[#575858] border-solid inset-0 pointer-events-none rounded-[4.53px]" />
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Color Space */}
+              <SaturationB hsv={currentHsv} onChange={handleColorChange} currentColor={currentColor} />
+
+              {/* Hue Slider */}
+              <div className="bg-black relative shrink-0 w-full">
+                <div className="flex flex-col gap-[16px] items-center p-[16px] w-full">
+                  <HueSliderB hue={currentHsv.h} onChange={handleHueChange} />
                 </div>
               </div>
             </div>
 
-            {/* Color Space - 160px, full width */}
-            <SaturationB hsv={currentHsv} onChange={handleColorChange} currentColor={currentColor} />
-
-            {/* Hue Slider */}
-            <div className="bg-black relative shrink-0 w-full">
-              <div className="flex flex-col gap-[16px] items-center p-[16px] w-full">
-                <HueSliderB hue={currentHsv.h} onChange={handleHueChange} />
-              </div>
+            {/* Footer Buttons - Layout B 底部內縮修正 */}
+            <div 
+              className="bg-black border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full"
+              style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom))' }}
+            >
+              <button onClick={handleReload} className="bg-[#575858] flex-1 h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
+                恢复默认
+              </button>
+              <button onClick={handleSave} className="bg-[#dc3b40] flex-1 h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#e05055] active:bg-[#b03033] transition-colors">
+                保存配色
+              </button>
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Footer Buttons - Layout B */}
-          <div className="bg-black h-[74px] relative shrink-0 w-full">
-            <div aria-hidden="true" className="absolute border-[rgba(255,255,255,0.05)] border-solid border-t inset-0 pointer-events-none" />
-            <div className="flex items-center size-full">
-              <div className="flex gap-[8px] items-center p-[16px] size-full">
-                <button onClick={handleReload} className="bg-[#575858] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
-                  恢复默认
-                </button>
-                <button onClick={handleSave} className="bg-[#dc3b40] flex flex-[1_0_0] h-full items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#e05055] active:bg-[#b03033] transition-colors">
-                  保存配色
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Dialog Overlay */}
+      {/* 4. Dialog Overlay: 修正 Dialog 被切掉的問題 */}
       {showDialog && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowDialog(false)}>
           <div className="bg-white rounded-[8px] overflow-clip w-[260px] relative" onClick={(e) => e.stopPropagation()}>
@@ -1177,6 +1103,13 @@ export default function ColorPickerTool() {
                 保存成功
               </div>
             </div>
+            {/* 新增簡單的關閉按鈕 */}
+            <button 
+              onClick={() => setShowDialog(false)}
+              className="absolute right-2 top-2 size-6 flex items-center justify-center"
+            >
+              <IconCloseSmall />
+            </button>
           </div>
         </div>
       )}
