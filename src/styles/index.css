@@ -2,15 +2,12 @@
 @import './tailwind.css';
 @import './theme.css';
 /* src/styles/index.css */
-html, body {
-  /* 使用 100dvh 確保在行動裝置上能自動扣除瀏覽器網址列 */
-  height: 100dvh;
+html, body, #root {
+  height: 100dvh; /* 動態視窗高度，自動扣除網址列 */
   margin: 0;
   padding: 0;
   overflow: hidden; /* 徹底禁止全頁滾動 */
-  background-color: #000000 !important; /* 防止底部露出白色 */
-  position: fixed; /* 額外保護，防止 iOS 橡皮筋效果 */
-  width: 100%;
+  background-color: #000000 !important;
 }
 
 #root {
