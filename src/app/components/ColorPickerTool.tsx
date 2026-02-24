@@ -1091,11 +1091,11 @@ export default function ColorPickerTool() {
             </div>
           </div>
 
-          {/* Footer Buttons */}
+          {/* Footer Buttons - 這裡修改了 padding 避開底部白條 */}
       <div 
         className="bg-[#252625] border-t border-[rgba(0,0,0,0.3)] p-[16px] flex gap-[8px] items-center w-full"
         style={{ 
-          paddingBottom: 'calc(12px + env(safe-area-inset-bottom))',
+          paddingBottom: 'calc(16px + env(safe-area-inset-bottom))', // 關鍵：把按鈕往上推
           height: 'auto' 
         }}
       >
