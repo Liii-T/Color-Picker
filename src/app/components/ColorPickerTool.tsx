@@ -388,9 +388,9 @@ export default function ColorPickerTool() {
                   </div>
                   <div className="h-[30px] w-full flex justify-center">
                     <div className="flex items-start justify-center pl-[16px] pt-[4px]">
-                       <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: '48px 144px', backgroundPosition: 'left top' }} />
-                       <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: '48px 144px', backgroundPosition: 'left top' }} />
-                       <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: '48px 144px', backgroundPosition: 'left top' }} />
+                       <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: '24px 24px', backgroundPosition: 'left top' }} />
+                       <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: '24px 24px', backgroundPosition: 'left top' }} />
+                       <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: '24px 24px', backgroundPosition: 'left top' }} />
                        <div className="pl-[8px] flex items-center justify-center">
                          <div className="-scale-y-100 flex-none"><IconCheck color={secondaryColor} /></div>
                        </div>
