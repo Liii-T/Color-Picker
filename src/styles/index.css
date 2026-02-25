@@ -1,26 +1,3 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
-/* src/styles/index.css */
-html {
-  /* 修正 iOS PWA 模式下的高度計算 */
-  height: -webkit-fill-available;
-}
-
-body, #root {
-  /* 使用 fill-available 確保填滿，不留網址列空隙 */
-  height: 100vh;
-  height: -webkit-fill-available;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  position: fixed; /* 強制鎖定，禁止任何滾動出現 */
-  width: 100%;
-  left: 0;
-  top: 0;
-}
-
-#root {
-  display: flex;
-  flex-direction: column;
-}

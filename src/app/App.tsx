@@ -1,5 +1,5 @@
-import ColorPickerTool from "./components/ColorPickerTool";
+import RootLayout from './components/RootLayout';
 
 export default function App() {
-  return <ColorPickerTool />;
+  return <RootLayout />;
 }
