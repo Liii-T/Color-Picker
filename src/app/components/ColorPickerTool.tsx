@@ -386,263 +386,216 @@ const DEFAULT_PRIMARY = GAME_DEFAULTS["快3"].primary;
 const DEFAULT_SECONDARY = GAME_DEFAULTS["快3"].secondary;
 
 export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
-  const { setIsCustom, closeSkin } = ctx;
-  const [primaryColor, setPrimaryColor] =
-    useState(DEFAULT_PRIMARY);
-  const [secondaryColor, setSecondaryColor] = useState(
-    DEFAULT_SECONDARY,
-  );
-  const [activeTab, setActiveTab] = useState<
-    "Primary" | "Secondary"
-  >("Primary");
-  const [showDialog, setShowDialog] = useState(false);
-  const dialogTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const [selectedGame, setSelectedGame] = useState("快3");
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+const {
+setIsCustom,
+closeSkin,
+savedPrimary,
+setSavedPrimary,
+savedSecondary,
+setSavedSecondary
+} = ctx;
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    if (!showDropdown) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showDropdown]);
+const [primaryColor, setPrimaryColor] = useState(savedPrimary);
+const [secondaryColor, setSecondaryColor] = useState(savedSecondary);
+const [activeTab, setActiveTab] = useState<"Primary" | "Secondary">("Primary");
+const [showDialog, setShowDialog] = useState(false);
+const dialogTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+const [showExitConfirm, setShowExitConfirm] = useState(false);
+const [selectedGame, setSelectedGame] = useState("快3");
+const [showDropdown, setShowDropdown] = useState(false);
+const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Cleanup dialog timer on unmount
-  useEffect(() => {
-    return () => {
-      if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
-    };
-  }, []);
+// 同步系統底色，消滅 iOS PWA 模式下的色塊空隙
+useEffect(() => {
+const themeColor = "#000000";
+document.body.style.backgroundColor = themeColor;
+document.documentElement.style.backgroundColor = themeColor;
+}, []);
 
-  const [initialState, setInitialState] = useState({
-    primary: DEFAULT_PRIMARY,
-    secondary: DEFAULT_SECONDARY,
-  });
+// Close dropdown on outside click
+useEffect(() => {
+if (!showDropdown) return;
+const handleClickOutside = (e: MouseEvent) => {
+if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+setShowDropdown(false);
+}
+};
+document.addEventListener("mousedown", handleClickOutside);
+return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [showDropdown]);
 
-  // Switch game handler: change colors to game defaults
-  const handleSwitchGame = (game: string) => {
-    const defaults = GAME_DEFAULTS[game];
-    if (defaults) {
-      setPrimaryColor(defaults.primary);
-      setSecondaryColor(defaults.secondary);
-      setInitialState({ primary: defaults.primary, secondary: defaults.secondary });
-    }
-    setSelectedGame(game);
-    setShowDropdown(false);
-  };
+// Cleanup dialog timer on unmount
+useEffect(() => {
+return () => {
+if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
+};
+}, []);
 
-  const currentColor =
-    activeTab === "Primary" ? primaryColor : secondaryColor;
-  const currentSetColor =
-    activeTab === "Primary"
-      ? setPrimaryColor
-      : setSecondaryColor;
+const [initialState, setInitialState] = useState({
+primary: savedPrimary,
+secondary: savedSecondary,
+});
 
-  const currentHsv = colord(currentColor).toHsv();
+// Switch game handler: change colors to game defaults
+const handleSwitchGame = (game: string) => {
+const defaults = GAME_DEFAULTS[game];
+if (defaults) {
+setPrimaryColor(defaults.primary);
+setSecondaryColor(defaults.secondary);
+}
+setSelectedGame(game);
+setShowDropdown(false);
+};
 
-  // Derived text color: secondaryColor + white 0.6 overlay
-  const previewTextColor = colord(secondaryColor)
-    .mix("#FFFFFF", 0.6)
-    .toHex();
+const currentColor = activeTab === "Primary" ? primaryColor : secondaryColor;
+const currentSetColor = activeTab === "Primary" ? setPrimaryColor : setSecondaryColor;
 
-  // Derived border colors for preview (dynamic from primary/secondary)
-  const previewTopBorderColor = colord(primaryColor)
-    .mix(secondaryColor, 0.5)
-    .toHex();
-  const previewVerticalBorderColor = colord(primaryColor)
-    .darken(0.05)
-    .toHex();
+const currentHsv = colord(currentColor).toHsv();
 
-  const handleColorChange = (newHsv: {
-    h: number;
-    s: number;
-    v: number;
-  }) => {
-    const newHex = colord(newHsv).toHex().toUpperCase();
-    currentSetColor(newHex);
-  };
+// Derived text color: secondaryColor + white 0.6 overlay
+const previewTextColor = colord(secondaryColor).mix("#FFFFFF", 0.6).toHex();
 
-  const handleHueChange = (newHue: number) => {
-    const newHex = colord({ ...currentHsv, h: newHue })
-      .toHex()
-      .toUpperCase();
-    currentSetColor(newHex);
-  };
+// Derived border colors for preview (dynamic from primary/secondary)
+const previewTopBorderColor = colord(primaryColor).mix(secondaryColor, 0.5).toHex();
+const previewVerticalBorderColor = colord(primaryColor).darken(0.05).toHex();
 
-  const handleSave = () => {
-    console.log("Colors Saved:", {
-      primaryColor,
-      secondaryColor,
-    });
-    setInitialState({
-      primary: primaryColor,
-      secondary: secondaryColor,
-    });
-    setIsCustom(true);
-    setShowDialog(true);
-    if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
-    dialogTimerRef.current = setTimeout(() => {
-      setShowDialog(false);
-      closeSkin();
-    }, 2000);
-  };
+const handleColorChange = (newHsv: { h: number; s: number; v: number }) => {
+const newHex = colord(newHsv).toHex().toUpperCase();
+currentSetColor(newHex);
+};
 
-  const handleCancel = () => {
-    setPrimaryColor(initialState.primary);
-    setSecondaryColor(initialState.secondary);
-  };
+const handleHueChange = (newHue: number) => {
+const newHex = colord({ ...currentHsv, h: newHue }).toHex().toUpperCase();
+currentSetColor(newHex);
+};
 
-  const handleReload = () => {
-    const defaults = GAME_DEFAULTS[selectedGame];
-    setPrimaryColor(defaults.primary);
-    setSecondaryColor(defaults.secondary);
-    setInitialState({ primary: defaults.primary, secondary: defaults.secondary });
-    setIsCustom(false);
-  };
+// 核心規則：保存配色並判斷是否回歸「預設」
+const handleSave = () => {
+const defaults = GAME_DEFAULTS[selectedGame];
+const isDefault =
+primaryColor.toUpperCase() === defaults.primary.toUpperCase() &&
+secondaryColor.toUpperCase() === defaults.secondary.toUpperCase();
 
-  const handleRestoreDefault = () => {
-    handleReload();
-    setIsCustom(false);
-    setShowDialog(false);
-  };
+// 更新記憶系統 (RootLayout)
+setSavedPrimary(primaryColor);
+setSavedSecondary(secondaryColor);
+setInitialState({ primary: primaryColor, secondary: secondaryColor });
 
-  const handleCopyColor = async () => {
-    const text = `Primary: ${primaryColor}, Secondary: ${secondaryColor}`;
+// 判定顯示字樣
+setIsCustom(!isDefault);
 
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("Colors copied to clipboard: " + text);
-    } catch (err) {
-      // Fallback for environments where clipboard API is blocked
-      console.warn(
-        "Clipboard API failed, trying legacy fallback...",
-        err,
-      );
-      try {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
+setShowDialog(true);
+if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
+dialogTimerRef.current = setTimeout(() => {
+  setShowDialog(false);
+  closeSkin();
+}, 2000);
+};
 
-        // Ensure it's not visible but part of the DOM
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        textArea.style.top = "0";
-        document.body.appendChild(textArea);
+const handleCancel = () => {
+setPrimaryColor(initialState.primary);
+setSecondaryColor(initialState.secondary);
+};
 
-        textArea.focus();
-        textArea.select();
+const handleReload = () => {
+const defaults = GAME_DEFAULTS[selectedGame];
+setPrimaryColor(defaults.primary);
+setSecondaryColor(defaults.secondary);
+};
 
-        const successful = document.execCommand("copy");
-        document.body.removeChild(textArea);
+const handleRestoreDefault = () => {
+handleReload();
+setShowDialog(false);
+};
 
-        if (successful) {
-          alert("Colors copied to clipboard: " + text);
-        } else {
-          throw new Error("execCommand copy failed");
-        }
-      } catch (fallbackErr) {
-        console.error("Failed to copy: ", fallbackErr);
-        alert(
-          "Failed to copy colors. Please manually copy them.",
-        );
-      }
-    }
+const handleCopyColor = async () => {
+const text = Primary: ${primaryColor}, Secondary: ${secondaryColor};
+try {
+await navigator.clipboard.writeText(text);
+alert("Colors copied to clipboard: " + text);
+} catch (err) {
+console.warn("Clipboard API failed, trying legacy fallback...", err);
+try {
+const textArea = document.createElement("textarea");
+textArea.value = text;
+textArea.style.position = "fixed";
+textArea.style.left = "-9999px";
+textArea.style.top = "0";
+document.body.appendChild(textArea);
+textArea.focus();
+textArea.select();
+const successful = document.execCommand("copy");
+document.body.removeChild(textArea);
+if (successful) {
+alert("Colors copied to clipboard: " + text);
+} else {
+throw new Error("execCommand copy failed");
+}
+} catch (fallbackErr) {
+console.error("Failed to copy: ", fallbackErr);
+alert("Failed to copy colors. Please manually copy them.");
+}
+}
+setShowDialog(false);
+};
 
-    setShowDialog(false);
-  };
+// Check if colors have been modified from initial state
+const isDirty = primaryColor !== initialState.primary || secondaryColor !== initialState.secondary;
 
-  // Check if colors have been modified from initial state
-  const isDirty =
-    primaryColor !== initialState.primary ||
-    secondaryColor !== initialState.secondary;
+const handleBack = () => {
+if (isDirty) {
+setShowExitConfirm(true);
+} else {
+closeSkin();
+}
+};
 
-  const handleBack = () => {
-    if (isDirty) {
-      setShowExitConfirm(true);
-    } else {
-      closeSkin();
-    }
-  };
+const handleConfirmExit = () => {
+setPrimaryColor(initialState.primary);
+setSecondaryColor(initialState.secondary);
+setShowExitConfirm(false);
+closeSkin();
+};
 
-  const handleConfirmExit = () => {
-    // Discard changes: restore to initial state
-    setPrimaryColor(initialState.primary);
-    setSecondaryColor(initialState.secondary);
-    setShowExitConfirm(false);
-    closeSkin();
-  };
+const handleCancelExit = () => {
+setShowExitConfirm(false);
+};
 
-  const handleCancelExit = () => {
-    setShowExitConfirm(false);
-  };
-
-  return (
-    <div
-      className="flex flex-col items-start relative h-full w-full font-sans"
-      style={{ backgroundColor: secondaryColor }}
-    >
-   {/* 1. Header: 固定高度並避開劉海 */}
-      <div 
-        className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
-        style={{ 
-          paddingTop: 'env(safe-area-inset-top)', 
-          height: 'calc(48px + env(safe-area-inset-top))' 
-        }}
-      >
-        <div className="w-[70px] flex items-center justify-center h-full px-[12px]">
-          <TablerIconX />
-        </div>
-        <div className="flex-1 flex justify-center items-center text-[18px] font-medium leading-[normal] text-center">
-          投注皮肤
-        </div>
-        {/* Dropdown Trigger */}
-        <div className="relative shrink-0 w-[70px] h-full" ref={dropdownRef}>
-          <button
-            className="flex gap-[7px] h-full items-center justify-end pr-[12px] w-full"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <span className="text-[18px] font-medium">{selectedGame}</span>
-            <div className="flex items-center justify-center">
-              <div className="-scale-y-100 flex-none">
-                <IconDropdownArrow />
-              </div>
-            </div>
-          </button>
-
-          {/* Dropdown Menu */}
-          {showDropdown && (
-            <div className="absolute right-0 top-[30px] w-[120px] z-30">
-              <div className="flex flex-col items-end justify-end shadow-[0px_1px_12px_0px_rgba(51,51,51,0.08)]">
-                <div className="relative shrink-0 size-[18px]">
-                  <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
-                    <path d={DROPDOWN_CORNER_PATH} fill="white" />
-                  </svg>
-                </div>
-                <div className="flex flex-col gap-px items-start shrink-0">
-                  <button
-                    className="bg-white flex h-[50px] items-center justify-center w-[120px] shadow-[0px_1px_0px_0px_#bbb39c] hover:bg-gray-50 active:bg-gray-100"
-                    onClick={() => handleSwitchGame("快3")}
-                  >
-                    <span className="text-[#333] text-[16px]">快3</span>
-                  </button>
-                  <button
-                    className="bg-white flex h-[50px] items-center justify-center w-[120px] shadow-[0px_1px_0px_0px_#bbb39c] hover:bg-gray-50 active:bg-gray-100"
-                    onClick={() => handleSwitchGame("其他")}
-                  >
-                    <span className="text-[#333] text-[16px]">其他</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+return (
+<div
+className="flex flex-col items-start relative h-full w-full font-sans"
+style={{ backgroundColor: secondaryColor }}
+>
+{/* 1. Header: 固定高度並避開劉海 /}
+<div
+className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
+style={{
+paddingTop: 'env(safe-area-inset-top)',
+height: 'calc(48px + env(safe-area-inset-top))'
+}}
+>
+<div
+className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer"
+onClick={handleBack}
+>
+<TablerIconX />
+</div>
+<div className="flex-1 flex justify-center items-center text-[18px] font-medium leading-[normal] text-center">
+投注皮肤
+</div>
+{/ Dropdown Trigger */}
+<div className="relative shrink-0 w-[70px] h-full" ref={dropdownRef}>
+<button
+className="flex gap-[7px] h-full items-center justify-end pr-[12px] w-full"
+onClick={() => setShowDropdown(!showDropdown)}
+>
+<span className="text-[18px] font-medium">{selectedGame}</span>
+<div className="flex items-center justify-center">
+<div className="-scale-y-100 flex-none">
+<IconDropdownArrow />
+</div>
+</div>
+</button>
 
       {/* Bg Preview */}
 <div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between" style={{ backgroundColor: secondaryColor }}>
