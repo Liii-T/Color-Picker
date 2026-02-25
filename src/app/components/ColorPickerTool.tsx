@@ -590,6 +590,9 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
    {/* 1. Header: 固定高度並避開劉海 */}
       <div 
         className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
+                <div className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer" onClick={handleBack}>
+          <TablerIconX />
+        </div>
         style={{ 
           paddingTop: 'env(safe-area-inset-top)', 
           height: 'calc(48px + env(safe-area-inset-top))' 
