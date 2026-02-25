@@ -587,40 +587,40 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
       className="flex flex-col items-start relative h-full w-full font-sans"
       style={{ backgroundColor: secondaryColor }}
     >
-{/* 1. Header */}
-<div 
-  className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
-  style={{ 
-    paddingTop: 'env(safe-area-inset-top)', 
-    height: 'calc(48px + env(safe-area-inset-top))' 
-  }}
->
-  {/* 返回 */}
-  <div 
-    className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer active:opacity-60 transition-opacity" 
-    onClick={handleBack}
-  >
-    <TablerIconX />
-  </div>
-
-  {/* 標題 */}
-  <div className="flex-1 flex justify-center items-center text-[18px] font-medium leading-[normal] text-center">
-    投注皮肤
-  </div>
-
-  {/* 右側下拉選單觸發器 */}
-  <div className="relative shrink-0 w-[70px] h-full" ref={dropdownRef}>
-    <button
-      className="flex gap-[7px] h-full items-center justify-end pr-[12px] w-full"
-      onClick={() => setShowDropdown(!showDropdown)}
-    >
-      <span className="text-[18px] font-medium">{selectedGame}</span>
-      <div className="flex items-center justify-center">
-        <div className="-scale-y-100 flex-none">
-          <IconDropdownArrow />
+      {/* 1. Header */}
+      <div 
+        className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
+        style={{ 
+          paddingTop: 'env(safe-area-inset-top)', 
+          height: 'calc(48px + env(safe-area-inset-top))' 
+        }}
+      >
+        {/* 返回 */}
+        <div 
+          className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer active:opacity-60 transition-opacity" 
+          onClick={handleBack}
+        >
+          <TablerIconX />
         </div>
-      </div>
-    </button>
+
+        {/* 標題 */}
+        <div className="flex-1 flex justify-center items-center text-[18px] font-medium leading-[normal] text-center">
+          投注皮肤
+        </div>
+
+        {/* 右側下拉選單觸發器 */}
+        <div className="relative shrink-0 w-[70px] h-full" ref={dropdownRef}>
+          <button
+            className="flex gap-[7px] h-full items-center justify-end pr-[12px] w-full"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            <span className="text-[18px] font-medium">{selectedGame}</span>
+            <div className="flex items-center justify-center">
+              <div className="-scale-y-100 flex-none">
+                <IconDropdownArrow />
+              </div>
+            </div>
+          </button>
 
           {/* Dropdown Menu */}
           {showDropdown && (
@@ -652,7 +652,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
       </div>
 
       {/* Bg Preview */}
-<div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between" style={{ backgroundColor: secondaryColor }}>
+      <div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between" style={{ backgroundColor: secondaryColor }}>
         {selectedGame === "其他" ? (
           <BgPreviewGame2 primaryColor={primaryColor} secondaryColor={secondaryColor} />
         ) : (
@@ -769,7 +769,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
                       className="flex flex-[1_0_0] flex-col justify-center ml-2 text-[12px] leading-[normal]"
                       style={{ color: previewTextColor }}
                     >
-                      从11-66中任选1个或多个号码，选号与奖号(包含11-66，不限顺序)相同，即为中奖（不含豹子）。赔率11.66倍。
+                      从11-66中任选1个或多个号码，选号與奖号(包含11-66，不限顺序)相同，即為中獎（不含豹子）。赔率11.66倍。
                     </div>
                   </div>
                 </div>
@@ -890,7 +890,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
               <p className="font-['PingFang_SC',sans-serif] text-[14px] text-black text-center font-medium w-[220px]">
                 <span>你已进行</span>
                 <span>投注皮肤</span>
-                <span>配色修改，若直接退出，颜色方案修改将不会被保存。</span>
+                <span>配色修改，若直接退出，颜色方案修改將不會被保存。</span>
               </p>
             </div>
             {/* Buttons */}
