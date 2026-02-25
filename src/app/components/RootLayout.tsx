@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import React, { useState } from "react";
 import ProfilePage from "./ProfilePage";
 import ColorPickerTool from "./ColorPickerTool";
 
@@ -9,7 +8,6 @@ export type SkinState = {
   closeSkin: () => void;
   isCustom: boolean;
   setIsCustom: (val: boolean) => void;
-  // 新增：記憶顏色狀態
   savedPrimary: string;
   setSavedPrimary: (val: string) => void;
   savedSecondary: string;
@@ -19,8 +17,7 @@ export type SkinState = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isSkinOpen, setIsSkinOpen] = useState(false);
   const [isCustom, setIsCustom] = useState(false);
-  
-  // 初始值設為「快3」的預設色
+  // 記憶配色，初始為快3預設色
   const [savedPrimary, setSavedPrimary] = useState("#19593C");
   const [savedSecondary, setSavedSecondary] = useState("#317455");
 
@@ -33,27 +30,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     savedPrimary,
     setSavedPrimary,
     savedSecondary,
-    setSavedSecondary
+    setSavedSecondary,
   };
 
   return (
     <div className="relative size-full overflow-hidden">
-      <ProfilePage ctx={ctx} />
-
-      <AnimatePresence>
-        {skinOpen && (
-          <motion.div
-            key="skin-drawer"
-            className="absolute inset-0 z-40"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-          >
-            <ColorPickerTool ctx={ctx} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ProfilePage ctx={skinState} />
+      {isSkinOpen && (
+        <div className="absolute inset-0 z-50">
+          <ColorPickerTool ctx={skinState} />
+        </div>
+      )}
     </div>
   );
 }
