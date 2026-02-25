@@ -476,23 +476,31 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     currentSetColor(newHex);
   };
 
-  const handleSave = () => {
-    console.log("Colors Saved:", {
-      primaryColor,
-      secondaryColor,
-    });
-    setInitialState({
-      primary: primaryColor,
-      secondary: secondaryColor,
-    });
-    setIsCustom(true);
-    setShowDialog(true);
-    if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
-    dialogTimerRef.current = setTimeout(() => {
-      setShowDialog(false);
-      closeSkin();
-    }, 2000);
-  };
+const handleSave = () => {
+  const defaults = GAME_DEFAULTS[selectedGame];
+  
+  // 檢查目前顏色是否與預設顏色完全相同
+  const isDefaultColor = 
+    primaryColor.toUpperCase() === defaults.primary.toUpperCase() && 
+    secondaryColor.toUpperCase() === defaults.secondary.toUpperCase();
+
+  console.log("Colors Saved:", { primaryColor, secondaryColor });
+  
+  setInitialState({
+    primary: primaryColor,
+    secondary: secondaryColor,
+  });
+
+  setIsCustom(!isDefaultColor); 
+
+  setShowDialog(true);
+  
+  if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
+  dialogTimerRef.current = setTimeout(() => {
+    setShowDialog(false);
+    closeSkin();
+  }, 2000);
+};
 
   const handleCancel = () => {
     setPrimaryColor(initialState.primary);
@@ -500,12 +508,12 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
   };
 
   const handleReload = () => {
-    const defaults = GAME_DEFAULTS[selectedGame];
-    setPrimaryColor(defaults.primary);
-    setSecondaryColor(defaults.secondary);
-    setInitialState({ primary: defaults.primary, secondary: defaults.secondary });
-    setIsCustom(false);
-  };
+  const defaults = GAME_DEFAULTS[selectedGame];
+  setPrimaryColor(defaults.primary);
+  setSecondaryColor(defaults.secondary);
+  setInitialState({ primary: defaults.primary, secondary: defaults.secondary });
+  setIsCustom(false); 
+};
 
   const handleRestoreDefault = () => {
     handleReload();
