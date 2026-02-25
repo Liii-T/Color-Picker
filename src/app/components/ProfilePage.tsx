@@ -1,6 +1,6 @@
 import React from "react";
 import svgPaths from "../../imports/svg-o2bvfdxum3";
-import img8F58610879F7E312Jpg from "../../asset/f80855281cf23459dc9c265a006bcaea744c6be1.png";
+import img8F58610879F7E312Jpg from "/profile.png";
 import type { SkinState } from "./RootLayout";
 
 /* ── Shared small components ── */
