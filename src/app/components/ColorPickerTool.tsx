@@ -386,21 +386,74 @@ const DEFAULT_PRIMARY = GAME_DEFAULTS["快3"].primary;
 const DEFAULT_SECONDARY = GAME_DEFAULTS["快3"].secondary;
 
 export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
-  const { setIsCustom, closeSkin } = ctx;
-  const [primaryColor, setPrimaryColor] =
-    useState(DEFAULT_PRIMARY);
-  const [secondaryColor, setSecondaryColor] = useState(
-    DEFAULT_SECONDARY,
-  );
-  const [activeTab, setActiveTab] = useState<
-    "Primary" | "Secondary"
-  >("Primary");
+  const { 
+    setIsCustom, 
+    closeSkin, 
+    savedPrimary, 
+    setSavedPrimary, 
+    savedSecondary, 
+    setSavedSecondary 
+  } = ctx;
+
+  // 1. 記憶功能：初始化時直接讀取 ctx 裡的保存色，而不是常量
+  const [primaryColor, setPrimaryColor] = useState(savedPrimary);
+  const [secondaryColor, setSecondaryColor] = useState(savedSecondary);
+  
+  const [activeTab, setActiveTab] = useState<"Primary" | "Secondary">("Primary");
   const [showDialog, setShowDialog] = useState(false);
   const dialogTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [selectedGame, setSelectedGame] = useState("快3");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 用於 handleBack 的髒檢查基礎
+  const [initialState, setInitialState] = useState({
+    primary: savedPrimary,
+    secondary: savedSecondary,
+  });
+
+  // 2. 修正：同步 iOS 系統底色，解決桌面版空白區與色塊感
+  useEffect(() => {
+    const themeColor = "#000000"; 
+    document.body.style.backgroundColor = themeColor;
+    document.documentElement.style.backgroundColor = themeColor;
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) metaThemeColor.setAttribute("content", themeColor);
+  }, []);
+
+  // 3. 核心規則：保存配色時判定是否為「默認」
+  const handleSave = () => {
+    const defaults = GAME_DEFAULTS[selectedGame];
+    
+    // 檢查目前顏色是否與該遊戲的預設值完全相同（忽略大小寫）
+    const isDefaultColor = 
+      primaryColor.toUpperCase() === defaults.primary.toUpperCase() && 
+      secondaryColor.toUpperCase() === defaults.secondary.toUpperCase();
+
+    // 更新記憶系統（全域狀態）
+    setSavedPrimary(primaryColor);
+    setSavedSecondary(secondaryColor);
+    setInitialState({ primary: primaryColor, secondary: secondaryColor });
+
+    // 如果顏色等於預設值，setIsCustom 為 false -> 個人頁顯示「默認」
+    // 如果不等於，setIsCustom 為 true -> 個人頁顯示「自定義」
+    setIsCustom(!isDefaultColor); 
+
+    setShowDialog(true);
+    if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
+    dialogTimerRef.current = setTimeout(() => {
+      setShowDialog(false);
+      closeSkin();
+    }, 2000);
+  };
+
+  const handleReload = () => {
+    const defaults = GAME_DEFAULTS[selectedGame];
+    setPrimaryColor(defaults.primary);
+    setSecondaryColor(defaults.secondary);
+    // 恢復後尚未按保存前，維持當前 initial
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
