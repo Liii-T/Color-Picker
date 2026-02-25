@@ -13,6 +13,15 @@ import imgItem from "/Item.png";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
+// 確保全域背景色與當前 Layout 底部工具欄一致
+useEffect(() => {
+  const bottomColor = layout === "A" ? "#252625" : "#000000";
+  document.body.style.backgroundColor = bottomColor;
+  // 同步更新手機頂部狀態欄顏色（可選）
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) metaThemeColor.setAttribute("content", bottomColor);
+}, [layout]);
+
 extend([mixPlugin, namesPlugin]);
 
 // --- Utility ---
