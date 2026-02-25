@@ -1078,7 +1078,7 @@ export default function ColorPickerTool() {
             {/* Footer Buttons - Layout B 底部內縮修正 */}
             <div 
               className="bg-black border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full"
-              style={{ paddingBottom: 'calc(16px)' }}
+
             >
               <button onClick={handleReload} className="bg-[#575858] flex-1 h-[40px] items-center justify-center rounded-[4.53px] text-white text-[14px] hover:bg-[#666] active:bg-[#444] transition-colors">
                 恢复默认
