@@ -395,7 +395,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     setSavedSecondary 
   } = ctx;
 
-  // 1. 記憶功能：初始化時直接讀取 ctx 裡的保存色，而不是常量
+  // 1. 記憶功能：初始化時讀取 ctx 裡的保存色
   const [primaryColor, setPrimaryColor] = useState(savedPrimary);
   const [secondaryColor, setSecondaryColor] = useState(savedSecondary);
   
@@ -407,13 +407,13 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 用於 handleBack 的髒檢查基礎
+  // 用於 handleBack 的髒檢查
   const [initialState, setInitialState] = useState({
     primary: savedPrimary,
     secondary: savedSecondary,
   });
 
-  // 2. 修正：同步 iOS 系統底色，解決桌面版空白區與色塊感
+  // 同步 iOS 系統底色，解決桌面版空白區與色塊感
   useEffect(() => {
     const themeColor = "#000000"; 
     document.body.style.backgroundColor = themeColor;
@@ -422,22 +422,21 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     if (metaThemeColor) metaThemeColor.setAttribute("content", themeColor);
   }, []);
 
-  // 3. 核心規則：保存配色時判定是否為「默認」
+// 2. 核心規則：判定是否為「默認」並更新記憶
   const handleSave = () => {
     const defaults = GAME_DEFAULTS[selectedGame];
     
-    // 檢查目前顏色是否與該遊戲的預設值完全相同（忽略大小寫）
+    // 比對色碼判斷是否為預設
     const isDefaultColor = 
       primaryColor.toUpperCase() === defaults.primary.toUpperCase() && 
       secondaryColor.toUpperCase() === defaults.secondary.toUpperCase();
 
-    // 更新記憶系統（全域狀態）
+    // 更新全域記憶
     setSavedPrimary(primaryColor);
     setSavedSecondary(secondaryColor);
     setInitialState({ primary: primaryColor, secondary: secondaryColor });
 
-    // 如果顏色等於預設值，setIsCustom 為 false -> 個人頁顯示「默認」
-    // 如果不等於，setIsCustom 為 true -> 個人頁顯示「自定義」
+    // 設定個人頁顯示狀態
     setIsCustom(!isDefaultColor); 
 
     setShowDialog(true);
@@ -452,7 +451,6 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     const defaults = GAME_DEFAULTS[selectedGame];
     setPrimaryColor(defaults.primary);
     setSecondaryColor(defaults.secondary);
-    // 恢復後尚未按保存前，維持當前 initial
   };
 
   // Close dropdown on outside click
@@ -529,31 +527,6 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     currentSetColor(newHex);
   };
 
-const handleSave = () => {
-  const defaults = GAME_DEFAULTS[selectedGame];
-  
-  // 檢查目前顏色是否與預設顏色完全相同
-  const isDefaultColor = 
-    primaryColor.toUpperCase() === defaults.primary.toUpperCase() && 
-    secondaryColor.toUpperCase() === defaults.secondary.toUpperCase();
-
-  console.log("Colors Saved:", { primaryColor, secondaryColor });
-  
-  setInitialState({
-    primary: primaryColor,
-    secondary: secondaryColor,
-  });
-
-  setIsCustom(!isDefaultColor); 
-
-  setShowDialog(true);
-  
-  if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
-  dialogTimerRef.current = setTimeout(() => {
-    setShowDialog(false);
-    closeSkin();
-  }, 2000);
-};
 
   const handleCancel = () => {
     setPrimaryColor(initialState.primary);
