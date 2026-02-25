@@ -587,7 +587,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
       className="flex flex-col items-start relative h-full w-full font-sans"
       style={{ backgroundColor: secondaryColor }}
     >
-{/* 1. Header: 修正後的版本，兼顧 Safe Area 與返回功能 */}
+{/* 1. Header */}
 <div 
   className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
   style={{ 
@@ -595,7 +595,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     height: 'calc(48px + env(safe-area-inset-top))' 
   }}
 >
-  {/* 返回按鈕：確保 onClick 與 cursor-pointer 存在 */}
+  {/* 返回 */}
   <div 
     className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer active:opacity-60 transition-opacity" 
     onClick={handleBack}
@@ -888,9 +888,9 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
             {/* Main - Message */}
             <div className="bg-white flex flex-col items-center justify-center pb-[20px] pt-[12px] px-[20px] shrink-0 w-full">
               <p className="font-['PingFang_SC',sans-serif] text-[14px] text-black text-center font-medium w-[220px]">
-                <span>您已做了</span>
+                <span>你已进行</span>
                 <span>投注皮肤</span>
-                <span>配色修改，若是直接退出將不會進行修改</span>
+                <span>配色修改，若直接退出，颜色方案修改将不会被保存。</span>
               </p>
             </div>
             {/* Buttons */}
