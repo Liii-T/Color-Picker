@@ -509,7 +509,7 @@ setShowDialog(false);
 };
 
 const handleCopyColor = async () => {
-const text = `Primary: ${primaryColor}, Secondary: ${secondaryColor};
+const text = Primary: ${primaryColor}, Secondary: ${secondaryColor};
 try {
 await navigator.clipboard.writeText(text);
 alert("Colors copied to clipboard: " + text);
@@ -597,31 +597,63 @@ onClick={() => setShowDropdown(!showDropdown)}
 </div>
 </button>
 
-{/* Bg Preview: 修正 backgroundImage 的反引號語法 */}
-      <div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between">
+      {/* Bg Preview */}
+<div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between" style={{ backgroundColor: secondaryColor }}>
         {selectedGame === "其他" ? (
           <BgPreviewGame2 primaryColor={primaryColor} secondaryColor={secondaryColor} />
         ) : (
-          <div className="flex flex-col w-full">
+          <>
+            {/* Header Preview Section */}
             <div className="flex flex-col h-[68px] shrink-0 w-full relative">
-              <div className="h-px w-full" style={{ backgroundColor: previewTopBorderColor }} />
-              <div className="flex flex-1 items-center justify-center relative w-full" style={{ backgroundColor: primaryColor }}>
-                <div className="flex-[1_0_0] h-full flex flex-col justify-center px-[16px]">
-                  <div className="w-full text-center text-[14px] mb-1" style={{ color: previewTextColor }}>0606006期开奖号码</div>
-                  <div className="h-[30px] w-full flex justify-center items-center gap-1">
-                    <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: "48px 144px" }} />
-                    <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: "48px 144px" }} />
-                    <div className="size-[24px] bg-no-repeat" style={{ backgroundImage: `url('${imgItem}')`, backgroundSize: "48px 144px" }} />
+              <div className="h-px shrink-0 w-full" style={{ backgroundColor: previewTopBorderColor }} />
+              <div
+                className="flex flex-1 items-center justify-center relative w-full"
+                style={{ backgroundColor: primaryColor }}
+              >
+                {/* Left Content */}
+                <div className="flex-[1_0_0] h-full relative">
+                  <div className="flex flex-col justify-center size-full items-start px-[16px]">
+                    <div
+                      className="w-full flex justify-center text-[14px] text-center mb-1"
+                      style={{ color: previewTextColor }}
+                    >
+                      0606006期开奖号码
+                    </div>
+                    <div className="h-[30px] w-full flex justify-center">
+                      <div className="flex items-start justify-center pl-[16px] pt-[4px]">
+                        <div
+                          className="size-[24px] bg-no-repeat"
+                          style={{
+                            backgroundImage: `url('${imgItem}')`,
+                            backgroundSize: "48px 144px",
+                            backgroundPosition: "left top",
+                          }}
+                        />
+                        <div
+                          className="size-[24px] bg-no-repeat"
+                          style={{
+                            backgroundImage: `url('${imgItem}')`,
+                            backgroundSize: "48px 144px",
+                            backgroundPosition: "left top",
+                          }}
+                        />
+                        <div
+                          className="size-[24px] bg-no-repeat"
+                          style={{
+                            backgroundImage: `url('${imgItem}')`,
+                            backgroundSize: "48px 144px",
+                            backgroundPosition: "left top",
+                          }}
+                        />
+                        <div className="pl-[8px] flex items-center justify-center">
+                          <div className="-scale-y-100 flex-none">
+                            <IconCheck color={secondaryColor} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex-[1_0_0] h-full border-l px-4" style={{ borderColor: previewVerticalBorderColor }}>
-                   {/* 截止倒計時內容... */}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      </div>
 
                 {/* Vertical Border / Right Content */}
                 <div className="flex-[1_0_0] h-full min-h-[66px] relative border-l" style={{ borderColor: previewVerticalBorderColor }}>
