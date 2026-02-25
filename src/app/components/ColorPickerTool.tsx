@@ -584,7 +584,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
 
   return (
     <div
-      className="flex flex-col items-start relative size-full min-h-screen font-sans"
+      className="flex flex-col items-start relative h-full w-full font-sans"
       style={{ backgroundColor: secondaryColor }}
     >
       {/* Header */}
