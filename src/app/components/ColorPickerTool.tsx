@@ -607,7 +607,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
             className="flex gap-[7px] h-full items-center justify-end pr-[12px] w-full"
             onClick={() => setShowDropdown(!showDropdown)}
           >
-            <span className="text-[18px] font-medium">{layout}</span>
+            <span className="text-[18px] font-medium">{selectedGame}</span>
             <div className="flex items-center justify-center">
               <div className="-scale-y-100 flex-none">
                 <IconDropdownArrow />
