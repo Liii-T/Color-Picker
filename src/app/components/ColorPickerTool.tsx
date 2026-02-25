@@ -509,7 +509,7 @@ setShowDialog(false);
 };
 
 const handleCopyColor = async () => {
-const text = `Primary: ${primaryColor}, Secondary: ${secondaryColor};
+const text = Primary: ${primaryColor}, Secondary: ${secondaryColor};
 try {
 await navigator.clipboard.writeText(text);
 alert("Colors copied to clipboard: " + text);
