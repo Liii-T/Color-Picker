@@ -620,7 +620,7 @@ onClick={() => setShowDropdown(!showDropdown)}
               </div>
             </div>
           </div>
-        )}
+        );
       </div>
 
                 {/* Vertical Border / Right Content */}
