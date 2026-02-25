@@ -699,6 +699,9 @@ export default function ColorPickerTool() {
 useEffect(() => {
     const bottomColor = layout === "A" ? "#252625" : "#000000";
     document.body.style.backgroundColor = bottomColor;
+    document.documentElement.style.backgroundColor = bottomColor;
+
+    // 更新 Android/iOS 的主題色標籤
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) metaThemeColor.setAttribute("content", bottomColor);
   }, [layout]);
