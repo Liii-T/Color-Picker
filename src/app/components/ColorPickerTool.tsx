@@ -10,7 +10,7 @@ import namesPlugin from "colord/plugins/names";
 import { HexColorInput } from "react-colorful";
 import svgPaths from "../../imports/svg-5u5o543v2s";
 import svgSuccessPaths from "../../imports/svg-si1ktc0z0w";
-import imgItem from "src/asset/423fbf491ac4f4942e830c525241204e81939b1b.png";
+import imgItem from "../../asset/423fbf491ac4f4942e830c525241204e81939b1b.png";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 import BgPreviewGame2 from "./BgPreviewGame2";
