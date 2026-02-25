@@ -587,9 +587,15 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
       className="flex flex-col items-start relative h-full w-full font-sans"
       style={{ backgroundColor: secondaryColor }}
     >
-      {/* Header */}
-      <div className="bg-black flex h-[48px] items-center relative shrink-0 w-full text-white z-20">
-        <div className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer" onClick={handleBack}>
+   {/* 1. Header: 固定高度並避開劉海 */}
+      <div 
+        className="bg-black flex items-center relative shrink-0 w-full text-white z-20"
+        style={{ 
+          paddingTop: 'env(safe-area-inset-top)', 
+          height: 'calc(48px + env(safe-area-inset-top))' 
+        }}
+      >
+        <div className="w-[70px] flex items-center justify-center h-full px-[12px]">
           <TablerIconX />
         </div>
         <div className="flex-1 flex justify-center items-center text-[18px] font-medium leading-[normal] text-center">
@@ -601,7 +607,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
             className="flex gap-[7px] h-full items-center justify-end pr-[12px] w-full"
             onClick={() => setShowDropdown(!showDropdown)}
           >
-            <span className="text-[18px] font-medium">{selectedGame}</span>
+            <span className="text-[18px] font-medium">{layout}</span>
             <div className="flex items-center justify-center">
               <div className="-scale-y-100 flex-none">
                 <IconDropdownArrow />
@@ -639,10 +645,7 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
       </div>
 
       {/* Bg Preview */}
-      <div
-        className="flex-1 flex flex-col w-full relative overflow-hidden justify-between"
-        style={{ backgroundColor: secondaryColor }}
-      >
+<div className="flex-1 flex flex-col w-full relative overflow-hidden justify-between" style={{ backgroundColor: secondaryColor }}>
         {selectedGame === "其他" ? (
           <BgPreviewGame2 primaryColor={primaryColor} secondaryColor={secondaryColor} />
         ) : (
