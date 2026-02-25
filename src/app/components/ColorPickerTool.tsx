@@ -1013,7 +1013,6 @@ export default function ColorPickerTool() {
             {/* Footer Buttons - Layout A 底部內縮修正 */}
             <div 
               className="bg-[#252625] border-t border-[rgba(255,255,255,0.05)] p-[16px] flex gap-[8px] items-center w-full"
-              style={{ paddingBottom: '(16px)' }}
             >
               <button onClick={handleReload} className="bg-[#575858] p-[10px] rounded-[4px] shrink-0 w-[40px] flex items-center justify-center hover:bg-[#666] active:bg-[#444] transition-colors">
                 <TablerIconReload />
