@@ -3,16 +3,21 @@
 @import './theme.css';
 /* src/styles/index.css */
 html, body, #root {
-  height: 100dvh; /* 動態視窗高度，自動扣除網址列 */
+  height: 100dvh; 
+  width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* 徹底禁止全頁滾動 */
-  background-color: #000000 !important;
+  overflow: hidden; 
+  /* 關鍵：強制鎖定視窗位置，防止 PWA 模式下出現網址列殘留的滾動感 */
+  position: fixed; 
+  top: 0;
+  left: 0;
+  /* 禁止系統預設的下拉重新整理等手勢 */
+  touch-action: none; 
 }
 
 #root {
   height: 100%;
-}
-#root {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
