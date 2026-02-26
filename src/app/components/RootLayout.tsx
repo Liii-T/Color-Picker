@@ -22,6 +22,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [savedPrimary, setSavedPrimary] = useState("#19593C");
   const [savedSecondary, setSavedSecondary] = useState("#317455");
 
+  const DEFAULT_PRIMARY = "#19593C";
+  const DEFAULT_SECONDARY = "#317455";
+
+  useEffect(() => {
+    const isDefault =
+      savedPrimary === DEFAULT_PRIMARY &&
+      savedSecondary === DEFAULT_SECONDARY;
+  
+    setIsCustom(!isDefault);
+  }, [savedPrimary, savedSecondary]);
+  
   const openSkin = () => {
     setIsSkinVisible(true);
     setTimeout(() => setIsSkinOpen(true), 10); // 觸發動畫
