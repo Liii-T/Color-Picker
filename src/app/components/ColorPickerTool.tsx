@@ -387,24 +387,34 @@ const DEFAULT_SECONDARY = GAME_DEFAULTS["快3"].secondary;
 
 export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
 
-const { closeSkin, savedColors, setSavedColors } = ctx;
-const saved = savedColors[selectedGame];
+  const { closeSkin, savedColors, setSavedColors } = ctx;
 
-const [primaryColor, setPrimaryColor] =
-  useState(saved.primary);
+  const [selectedGame, setSelectedGame] = useState("快3");
 
-const [secondaryColor, setSecondaryColor] =
-  useState(saved.secondary);
-  
+  const saved =
+    savedColors?.[selectedGame] ??
+    GAME_DEFAULTS[selectedGame];
+
+  const [primaryColor, setPrimaryColor] =
+    useState(saved.primary);
+
+  const [secondaryColor, setSecondaryColor] =
+    useState(saved.secondary);
+
   const [activeTab, setActiveTab] = useState<
     "Primary" | "Secondary"
   >("Primary");
+
   const [showDialog, setShowDialog] = useState(false);
   const dialogTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const [selectedGame, setSelectedGame] = useState("快3");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [initialState, setInitialState] = useState({
+    primary: saved.primary,
+    secondary: saved.secondary,
+  });
 
  
   
