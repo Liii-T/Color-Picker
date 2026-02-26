@@ -387,11 +387,10 @@ const DEFAULT_SECONDARY = GAME_DEFAULTS["快3"].secondary;
 
 export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
   const { setIsCustom, closeSkin } = ctx;
-  const [primaryColor, setPrimaryColor] =
-    useState(DEFAULT_PRIMARY);
-  const [secondaryColor, setSecondaryColor] = useState(
-    DEFAULT_SECONDARY,
-  );
+ const [primaryColor, setPrimaryColor] =
+  useState(ctx.savedPrimary);
+const [secondaryColor, setSecondaryColor] =
+  useState(ctx.savedSecondary);
   const [activeTab, setActiveTab] = useState<
     "Primary" | "Secondary"
   >("Primary");
@@ -402,6 +401,8 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+ 
+  
   // Close dropdown on outside click
   useEffect(() => {
     if (!showDropdown) return;
@@ -421,11 +422,21 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     };
   }, []);
 
-  const [initialState, setInitialState] = useState({
-    primary: DEFAULT_PRIMARY,
-    secondary: DEFAULT_SECONDARY,
-  });
+const [initialState, setInitialState] = useState({
+  primary: ctx.savedPrimary,
+  secondary: ctx.savedSecondary,
+});
 
+  useEffect(() => {
+    setPrimaryColor(ctx.savedPrimary);
+    setSecondaryColor(ctx.savedSecondary);
+
+    setInitialState({
+      primary: ctx.savedPrimary,
+      secondary: ctx.savedSecondary,
+    });
+  }, [ctx.savedPrimary, ctx.savedSecondary]);
+  
   // Switch game handler: change colors to game defaults
   const handleSwitchGame = (game: string) => {
     const defaults = GAME_DEFAULTS[game];
@@ -475,17 +486,32 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
       .toUpperCase();
     currentSetColor(newHex);
   };
+const handleSave = () => {
+  console.log("Colors Saved:", {
+    primaryColor,
+    secondaryColor,
+  });
 
-  const handleSave = () => {
-    console.log("Colors Saved:", {
-      primaryColor,
-      secondaryColor,
-    });
-    setInitialState({
-      primary: primaryColor,
-      secondary: secondaryColor,
-    });
-    setIsCustom(true);
+  
+  ctx.setSavedPrimary(primaryColor);
+  ctx.setSavedSecondary(secondaryColor);
+  ctx.setIsCustom(true);
+
+  
+  setInitialState({
+    primary: primaryColor,
+    secondary: secondaryColor,
+  });
+
+  setShowDialog(true);
+
+  if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
+
+  dialogTimerRef.current = setTimeout(() => {
+    setShowDialog(false);
+    ctx.closeSkin();
+  }, 2000);
+};
     setShowDialog(true);
     if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
     dialogTimerRef.current = setTimeout(() => {
