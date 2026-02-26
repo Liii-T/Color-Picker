@@ -1,3 +1,5 @@
+console.log("rendering ColorPickerTool");
+
 import React, {
   useState,
   useRef,
