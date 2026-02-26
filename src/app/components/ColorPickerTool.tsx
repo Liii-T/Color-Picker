@@ -1,4 +1,3 @@
-console.log("rendering ColorPickerTool");
 
 import React, {
   useState,
@@ -402,6 +401,10 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
 
   const [secondaryColor, setSecondaryColor] =
     useState(saved.secondary);
+
+  const [activeTab, setActiveTab] = useState<
+  "Primary" | "Secondary"
+>("Primary");
 
 const [initialState, setInitialState] = useState({
   primary: saved.primary,
