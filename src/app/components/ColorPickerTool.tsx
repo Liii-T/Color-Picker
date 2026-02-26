@@ -387,16 +387,15 @@ const DEFAULT_SECONDARY = GAME_DEFAULTS["快3"].secondary;
 
 export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
 
-  const {
-    setIsCustom,
-    closeSkin,
-    setSavedPrimary,
-    setSavedSecondary,
-  } = ctx;
- const [primaryColor, setPrimaryColor] =
-  useState(ctx.savedPrimary);
+const { closeSkin, savedColors, setSavedColors } = ctx;
+const saved = savedColors[selectedGame];
+
+const [primaryColor, setPrimaryColor] =
+  useState(saved.primary);
+
 const [secondaryColor, setSecondaryColor] =
-  useState(ctx.savedSecondary);
+  useState(saved.secondary);
+  
   const [activeTab, setActiveTab] = useState<
     "Primary" | "Secondary"
   >("Primary");
@@ -433,15 +432,16 @@ const [initialState, setInitialState] = useState({
   secondary: ctx.savedSecondary,
 });
 
-  useEffect(() => {
-    setPrimaryColor(ctx.savedPrimary);
-    setSecondaryColor(ctx.savedSecondary);
+useEffect(() => {
+  const saved = savedColors[selectedGame];
+  setPrimaryColor(saved.primary);
+  setSecondaryColor(saved.secondary);
 
-    setInitialState({
-      primary: ctx.savedPrimary,
-      secondary: ctx.savedSecondary,
-    });
-  }, [ctx.savedPrimary, ctx.savedSecondary]);
+  setInitialState({
+    primary: saved.primary,
+    secondary: saved.secondary,
+  });
+}, [selectedGame, savedColors]);
   
   // Switch game handler: change colors to game defaults
   const handleSwitchGame = (game: string) => {
@@ -495,19 +495,13 @@ const [initialState, setInitialState] = useState({
 
 
   const handleSave = () => {
-  console.log("Colors Saved:", {
-    primaryColor,
-    secondaryColor,
-  });
-
-  setSavedPrimary(primaryColor);
-  setSavedSecondary(secondaryColor);
-  setIsCustom(true);
-
-  setInitialState({
-    primary: primaryColor,
-    secondary: secondaryColor,
-  });
+  setSavedColors((prev) => ({
+    ...prev,
+    [selectedGame]: {
+      primary: primaryColor,
+      secondary: secondaryColor,
+    },
+  }));
 
   setShowDialog(true);
 
@@ -525,12 +519,16 @@ const [initialState, setInitialState] = useState({
   };
 
   const handleReload = () => {
-    const defaults = GAME_DEFAULTS[selectedGame];
-    setPrimaryColor(defaults.primary);
-    setSecondaryColor(defaults.secondary);
-    setInitialState({ primary: defaults.primary, secondary: defaults.secondary });
-    setIsCustom(false);
-  };
+  const defaults = GAME_DEFAULTS[selectedGame];
+
+  setPrimaryColor(defaults.primary);
+  setSecondaryColor(defaults.secondary);
+
+  setSavedColors((prev) => ({
+    ...prev,
+    [selectedGame]: defaults,
+  }));
+};
 
   const handleRestoreDefault = () => {
     handleReload();
