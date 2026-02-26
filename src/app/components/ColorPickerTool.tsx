@@ -401,9 +401,10 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
   const [secondaryColor, setSecondaryColor] =
     useState(saved.secondary);
 
-  const [activeTab, setActiveTab] = useState<
-    "Primary" | "Secondary"
-  >("Primary");
+const [initialState, setInitialState] = useState({
+  primary: saved.primary,
+  secondary: saved.secondary,
+});
 
   const [showDialog, setShowDialog] = useState(false);
   const dialogTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -432,13 +433,16 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
 
 
 useEffect(() => {
-  const saved = savedColors[selectedGame];
-  setPrimaryColor(saved.primary);
-  setSecondaryColor(saved.secondary);
+  const safeSaved =
+    savedColors?.[selectedGame] ??
+    GAME_DEFAULTS[selectedGame];
+
+  setPrimaryColor(safeSaved.primary);
+  setSecondaryColor(safeSaved.secondary);
 
   setInitialState({
-    primary: saved.primary,
-    secondary: saved.secondary,
+    primary: safeSaved.primary,
+    secondary: safeSaved.secondary,
   });
 }, [selectedGame, savedColors]);
   
