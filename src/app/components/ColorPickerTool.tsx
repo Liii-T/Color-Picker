@@ -386,7 +386,13 @@ const DEFAULT_PRIMARY = GAME_DEFAULTS["快3"].primary;
 const DEFAULT_SECONDARY = GAME_DEFAULTS["快3"].secondary;
 
 export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
-  const { setIsCustom, closeSkin } = ctx;
+
+  const {
+    setIsCustom,
+    closeSkin,
+    setSavedPrimary,
+    setSavedSecondary,
+  } = ctx;
  const [primaryColor, setPrimaryColor] =
   useState(ctx.savedPrimary);
 const [secondaryColor, setSecondaryColor] =
@@ -492,12 +498,10 @@ const handleSave = () => {
     secondaryColor,
   });
 
-  
-  ctx.setSavedPrimary(primaryColor);
-  ctx.setSavedSecondary(secondaryColor);
-  ctx.setIsCustom(true);
+  setSavedPrimary(primaryColor);
+  setSavedSecondary(secondaryColor);
+  setIsCustom(true);
 
-  
   setInitialState({
     primary: primaryColor,
     secondary: secondaryColor,
@@ -509,7 +513,7 @@ const handleSave = () => {
 
   dialogTimerRef.current = setTimeout(() => {
     setShowDialog(false);
-    ctx.closeSkin();
+    closeSkin();
   }, 2000);
 };
     setShowDialog(true);
