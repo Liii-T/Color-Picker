@@ -595,9 +595,12 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
           height: 'calc(48px + env(safe-area-inset-top))' 
         }}
       >
-        <div className="w-[70px] flex items-center justify-center h-full px-[12px]">
-          <TablerIconX />
-        </div>
+<div
+  className="w-[70px] flex items-center justify-center h-full px-[12px] cursor-pointer"
+  onClick={handleBack}
+>
+  <TablerIconX />
+</div>
         <div className="flex-1 flex justify-center items-center text-[18px] font-medium leading-[normal] text-center">
           投注皮肤
         </div>
