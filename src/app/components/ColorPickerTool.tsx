@@ -492,7 +492,9 @@ const [initialState, setInitialState] = useState({
       .toUpperCase();
     currentSetColor(newHex);
   };
-const handleSave = () => {
+
+
+  const handleSave = () => {
   console.log("Colors Saved:", {
     primaryColor,
     secondaryColor,
@@ -516,13 +518,6 @@ const handleSave = () => {
     closeSkin();
   }, 2000);
 };
-    setShowDialog(true);
-    if (dialogTimerRef.current) clearTimeout(dialogTimerRef.current);
-    dialogTimerRef.current = setTimeout(() => {
-      setShowDialog(false);
-      closeSkin();
-    }, 2000);
-  };
 
   const handleCancel = () => {
     setPrimaryColor(initialState.primary);
