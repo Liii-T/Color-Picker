@@ -445,15 +445,19 @@ useEffect(() => {
   
   // Switch game handler: change colors to game defaults
   const handleSwitchGame = (game: string) => {
-    const defaults = GAME_DEFAULTS[game];
-    if (defaults) {
-      setPrimaryColor(defaults.primary);
-      setSecondaryColor(defaults.secondary);
-      setInitialState({ primary: defaults.primary, secondary: defaults.secondary });
-    }
-    setSelectedGame(game);
-    setShowDropdown(false);
-  };
+  const saved = savedColors[game];
+
+  setPrimaryColor(saved.primary);
+  setSecondaryColor(saved.secondary);
+
+  setInitialState({
+    primary: saved.primary,
+    secondary: saved.secondary,
+  });
+
+  setSelectedGame(game);
+  setShowDropdown(false);
+};
 
   const currentColor =
     activeTab === "Primary" ? primaryColor : secondaryColor;
@@ -528,11 +532,15 @@ useEffect(() => {
     ...prev,
     [selectedGame]: defaults,
   }));
-};
 
+  setInitialState({
+    primary: defaults.primary,
+    secondary: defaults.secondary,
+  });
+};
+  
   const handleRestoreDefault = () => {
     handleReload();
-    setIsCustom(false);
     setShowDialog(false);
   };
 
