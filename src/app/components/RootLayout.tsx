@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProfilePage from "./ProfilePage";
 import ColorPickerTool from "./ColorPickerTool";
 
@@ -16,15 +16,26 @@ export type SkinState = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isSkinOpen, setIsSkinOpen] = useState(false);
+  const [isSkinVisible, setIsSkinVisible] = useState(false);
+
   const [isCustom, setIsCustom] = useState(false);
-  // 記憶配色，初始為快3預設色
   const [savedPrimary, setSavedPrimary] = useState("#19593C");
   const [savedSecondary, setSavedSecondary] = useState("#317455");
 
+  const openSkin = () => {
+    setIsSkinVisible(true);
+    setTimeout(() => setIsSkinOpen(true), 10); // 觸發動畫
+  };
+
+  const closeSkin = () => {
+    setIsSkinOpen(false);
+    setTimeout(() => setIsSkinVisible(false), 300); // 等動畫結束
+  };
+
   const skinState: SkinState = {
     isSkinOpen,
-    openSkin: () => setIsSkinOpen(true),
-    closeSkin: () => setIsSkinOpen(false),
+    openSkin,
+    closeSkin,
     isCustom,
     setIsCustom,
     savedPrimary,
@@ -36,8 +47,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="relative size-full overflow-hidden">
       <ProfilePage ctx={skinState} />
-      {isSkinOpen && (
-        <div className="absolute inset-0 z-50">
+
+      {isSkinVisible && (
+        <div
+          className="absolute inset-0 z-50 transition-transform duration-300"
+          style={{
+            transform: isSkinOpen
+              ? "translateX(0)"
+              : "translateX(100%)",
+          }}
+        >
           <ColorPickerTool ctx={skinState} />
         </div>
       )}
