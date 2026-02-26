@@ -410,13 +410,6 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const [initialState, setInitialState] = useState({
-    primary: saved.primary,
-    secondary: saved.secondary,
-  });
-
- 
   
   // Close dropdown on outside click
   useEffect(() => {
@@ -437,10 +430,6 @@ export default function ColorPickerTool({ ctx }: { ctx: SkinState }) {
     };
   }, []);
 
-const [initialState, setInitialState] = useState({
-  primary: ctx.savedPrimary,
-  secondary: ctx.savedSecondary,
-});
 
 useEffect(() => {
   const saved = savedColors[selectedGame];
