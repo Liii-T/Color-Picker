@@ -131,15 +131,17 @@ export default function ProfilePage({ ctx }: { ctx: SkinState }) {
   return (
     <div className="bg-[#efeef4] flex flex-col items-center relative size-full min-h-screen">
       {/* Header */}
-      <div
-        className="flex h-[56.31px] items-center justify-center relative shrink-0 w-full"
+<div
+        className="flex items-center justify-center relative shrink-0 w-full"
         style={{
+          paddingTop: "env(safe-area-inset-top)",
+          height: "calc(56.31px + env(safe-area-inset-top))",
           backgroundImage:
             "linear-gradient(rgb(220, 59, 64) 2%, rgb(220, 59, 64) 50%, rgb(219, 59, 64) 51%, rgb(215, 54, 59) 100%)",
         }}
       >
         {/* Back button */}
-        <div className="absolute flex h-[56.31px] items-center justify-center left-0 top-0 w-[47px]">
+        <div className="absolute flex h-[56.31px] items-center justify-center left-0 bottom-0 w-[47px]">
           <div className="flex flex-1 h-full items-center justify-center pb-[17.43px] pt-[16.44px]">
             <div className="flex items-center justify-center shrink-0">
               <div className="-scale-y-100 flex-none">
@@ -148,9 +150,9 @@ export default function ProfilePage({ ctx }: { ctx: SkinState }) {
             </div>
           </div>
         </div>
-
+  
         {/* Tabs */}
-        <div className="flex h-[37.45px] items-start justify-center overflow-clip rounded-[4.41px] shrink-0 w-[234px]">
+        <div className="flex h-[37.45px] items-start justify-center overflow-clip rounded-[4.41px] shrink-0 w-[234px] relative">
           <div className="bg-white flex-1 h-full relative rounded-bl-[3.75px] rounded-tl-[3.75px]">
             <div aria-hidden="true" className="absolute border border-solid border-white inset-0 pointer-events-none rounded-bl-[3.75px] rounded-tl-[3.75px]" />
             <div className="absolute inset-0 flex items-center justify-center font-['PingFang_SC:Medium',sans-serif] text-[#dc3b40] text-[18.7px] text-center">
