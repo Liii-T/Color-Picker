@@ -1,46 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ProfilePage from "./ProfilePage";
 import ColorPickerTool from "./ColorPickerTool";
+
+const GAME_DEFAULTS = {
+  快3: { primary: "#19593C", secondary: "#317455" },
+  其他: { primary: "#E1D9BA", secondary: "#F5F1E4" },
+};
 
 export type SkinState = {
   isSkinOpen: boolean;
   openSkin: () => void;
   closeSkin: () => void;
   isCustom: boolean;
-  setIsCustom: (val: boolean) => void;
-  savedPrimary: string;
-  setSavedPrimary: (val: string) => void;
-  savedSecondary: string;
-  setSavedSecondary: (val: string) => void;
+  savedColors: typeof GAME_DEFAULTS;
+  setSavedColors: React.Dispatch<
+    React.SetStateAction<typeof GAME_DEFAULTS>
+  >;
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout() {
   const [isSkinOpen, setIsSkinOpen] = useState(false);
   const [isSkinVisible, setIsSkinVisible] = useState(false);
 
-  const [isCustom, setIsCustom] = useState(false);
-  const [savedPrimary, setSavedPrimary] = useState("#19593C");
-  const [savedSecondary, setSavedSecondary] = useState("#317455");
+  // ⭐ 每個遊戲自己的皮膚
+  const [savedColors, setSavedColors] = useState({
+    快3: { ...GAME_DEFAULTS.快3 },
+    其他: { ...GAME_DEFAULTS.其他 },
+  });
 
-  const DEFAULT_PRIMARY = "#19593C";
-  const DEFAULT_SECONDARY = "#317455";
+  // ⭐ 只要有任一遊戲不是默認 → 自定義
+  const isCustom = Object.keys(GAME_DEFAULTS).some((game) => {
+    return (
+      savedColors[game].primary !== GAME_DEFAULTS[game].primary ||
+      savedColors[game].secondary !== GAME_DEFAULTS[game].secondary
+    );
+  });
 
-  useEffect(() => {
-    const isDefault =
-      savedPrimary === DEFAULT_PRIMARY &&
-      savedSecondary === DEFAULT_SECONDARY;
-  
-    setIsCustom(!isDefault);
-  }, [savedPrimary, savedSecondary]);
-  
   const openSkin = () => {
     setIsSkinVisible(true);
-    setTimeout(() => setIsSkinOpen(true), 10); // 觸發動畫
+    setTimeout(() => setIsSkinOpen(true), 10);
   };
 
   const closeSkin = () => {
     setIsSkinOpen(false);
-    setTimeout(() => setIsSkinVisible(false), 300); // 等動畫結束
+    setTimeout(() => setIsSkinVisible(false), 300);
   };
 
   const skinState: SkinState = {
@@ -48,11 +51,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     openSkin,
     closeSkin,
     isCustom,
-    setIsCustom,
-    savedPrimary,
-    setSavedPrimary,
-    savedSecondary,
-    setSavedSecondary,
+    savedColors,
+    setSavedColors,
   };
 
   return (
